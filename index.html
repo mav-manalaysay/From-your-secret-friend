@@ -1,0 +1,541 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+    <title>From your secret friend</title>
+    <style>
+        body {
+            background-color: black;
+            color: green;
+            font-family: 'Georgia', serif;
+            margin: 0;
+            padding: 0;
+            display: block;
+            min-height: 100vh;
+            text-align: center;
+            overflow-x: hidden;
+        }
+
+        .retro-text {
+            font-family: 'Press Start 2P', cursive;
+            font-size: 20px;
+            color: #fff;
+        }
+
+        #page1 {
+            display: block;
+            padding-top: 80px;
+            opacity: 0;
+            animation: fadeIn 5s forwards;
+        }
+
+        #page1 h1 {
+            text-align: center;
+            color: rgb(10, 165, 10);
+            font-size: 25px;
+            white-space: nowrap;
+            overflow: hidden;
+            display: inline-block;
+            width: 0;
+            animation: typing 3s steps(30) 1s forwards, blink-caret 0.75s step-end infinite;
+            margin: 0 auto;
+            padding-top: 100px;
+        }
+
+        @media (max-width: 500px) {
+        #page1 h1 {
+        font-size: 18px; 
+        white-space: normal; 
+        width: auto;
+        }
+        }
+
+        @keyframes fadeIn {
+            0% { opacity: 0; }
+            100% { opacity: 1; }
+        }
+
+        @keyframes typing {
+            0% { width: 0; }
+            100% { width: 100%; }
+        }
+
+        @keyframes blink-caret {
+            50% { border-color: transparent; }
+        }
+
+        .flicker-image {
+            width: 400px;
+            height: auto;
+            animation: flicker 1s infinite;
+            margin-top: 30px;
+        }
+
+        @keyframes flicker {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0; }
+        }
+
+        button {
+            padding: 10px 20px;
+            background-color: #333;
+            color: #fff;
+            border: none;
+            cursor: pointer;
+            font-size: 18px;
+            border-radius: 5px;
+            margin-top: 20px;
+            transition: background-color 0.6s;
+        }
+
+        button:hover {
+            background-color: #555;
+        }
+
+        #page1 button {
+            width: 150px;
+            height: 60px;
+            text-align: center;
+            margin: 0 auto;
+            display: block;
+            font-size: 18px;
+            font-family: 'Georgia', serif;
+            background-color: darkgreen;
+            border-radius: 20px;
+        }
+
+        #page1 .exit-button {
+            background-color: darkred;
+            color: white;
+            width: 60px;
+            text-align: center;
+            height: 60px;
+            font-size: 14px;
+            border-radius: 50%;
+            position: absolute;
+            top: 20px;
+            right: 35px;
+            transition: background-color 0.6s;
+        }
+
+        #page1 .exit-button:hover {
+            background-color: darkred;
+        }
+
+        #page2 {
+            background-color: black;
+            color: #fff;
+            font-family: Arial, sans-serif;
+            text-align: center;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin: 0;
+            padding-top: 80px;
+            flex-direction: column;
+        }
+
+        .riddle-container {
+            margin-bottom: 20px;
+        }
+
+        .riddle {
+            font-size: 24px;
+            color: rgb(8, 146, 8);
+            margin-bottom: 20px;
+        }
+
+        .choice {
+            font-size: 18px;
+            background-color: #054701;
+            color: rgb(137, 255, 137);
+            padding: 10px 20px;
+            margin: 10px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            width: 200px;
+            transition: background-color 0.3s ease;
+        }
+
+        .choice:hover {
+            background-color: #555;
+        }
+
+        #page2 p {
+            color: green;
+            text-align: center;
+        }
+
+        .timer {
+            color: rgb(255, 195, 205);
+            font-size: 40px;
+            font-family: 'Roboto', Sans-Serif;
+            margin-top: 10px;
+            width: 80px;
+            height: 80px;
+            line-height: 80px;
+            border-radius: 50%;
+            border: 5px red;
+            display: inline-block;
+            text-align: center;
+            background-color: rgb(163, 0, 0);
+        }
+
+        #wrong-message {
+            color: red;
+            font-size: 24px;
+            margin-top: 20px;
+            display: none;
+            font-family: 'Press Start 2P', cursive;
+            white-space: nowrap;
+            overflow: hidden;
+            width: 0;
+            animation: typing 4s steps(20) forwards, blink-caret 0.75s step-end infinite;
+        }
+
+        #win-message {
+            color: green;
+            font-size: 24px;
+            margin-top: 20px;
+            display: none;
+            font-family: 'Press Start 2P', cursive;
+            white-space: nowrap;
+            overflow: hidden;
+            width: 0;
+            animation: typing 3s steps(30) forwards, blink-caret 0.75s step-end infinite;
+        }
+
+        #timeout-message {
+            display: none;
+            font-family: 'Roboto', Sans-Serif;
+            text-align: center;
+            margin-top: 100px;
+            align-items: center; /* Vertically center the content */
+            justify-content: center; /* Horizontally center the content */
+            font-size: 60px;
+            color: red;
+            padding: 20px;
+        }
+
+        #timeout-message img {
+            width: 1000px; /* Adjust the size of the image */
+            height: auto;
+            text-align: center;
+            margin-top: 20px;
+            opacity: 0; /* Start hidden */
+            animation: fadeIn 2s forwards; /* Fade in animation */
+        }
+
+        .flicker-text {
+            color: lightgreen;
+            font-size: 18px;
+            text-align: center;
+            margin-top: 20px;
+            display: block;
+            font-family: 'Press Start 2P', cursive;
+            animation: flickerText 1s infinite;
+        }
+
+        @keyframes flickerText {
+            0% { opacity: 1; }
+            50% { opacity: 0; }
+            100% { opacity: 1; }
+        }
+
+        /* Bounce animation for correct answer */
+        @keyframes bounce {
+            0%, 20%, 50%, 80%, 100% {
+                transform: translateY(0);
+            }
+            40% {
+                transform: translateY(-30px);
+            }
+            60% {
+                transform: translateY(-15px);
+            }
+        }
+
+        .correct-answer {
+            animation: bounce 1s;
+        }
+
+        #sound-controls {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            z-index: 1000;
+            background-color: transparent;
+            padding: 10px;
+            border-radius: 5px;
+            display: flex;
+            align-items: center;
+        }
+
+        #sound-controls button {
+            background-color: transparent;
+            margin: 0 5px;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 16px;
+        }
+    </style>
+</head>
+<body>
+    <!-- Sound controls -->
+    <div id="sound-controls">
+        <button id="play-music" onclick="playMusic()"></button>
+        <button id="pause-music" onclick="pauseMusic()"></button>
+        <button id="volume-up" onclick="volumeUp()">Vol +</button>
+        <button id="volume-down" onclick="volumeDown()">Vol -</button>
+    </div>
+
+    <audio id="background-music" loop src="Schubert - Ave Maria-VEED.mp3"></audio>
+    <audio id="countdown-beep" src="Bomb Countdown Beep  HQ Sound Effect-VEED.mp3"></audio>
+    <audio id="lose-sound" src="Horror Breathing Sound Effect.mp3"></audio>
+
+    <div id="page1" class="page active">
+        <h1 class="retro-text">Let&#39;s play a game, Me and you..</h1>
+        <h2></h2>
+        <img src="https://assets.onecompiler.app/43batmf99/43bfka2rn/483310399_625330710276738_8460490930457877985_n.jpg" alt="Flickering Image" class="flicker-image">
+        <button onclick="nextPage()">START</button>
+        <button class="exit-button" onclick="exitGame()">Exit</button>
+    </div>
+
+    <div id="countdown" style="display: none; font-size: 100px; font-weight: bold; color: green; text-align: center; margin-top: 200px; border-radius: 100px;"></div>
+
+    <div id="page2" class="page" style="display:none;">
+        <div class="riddle-container" id="riddle1">
+            <h2 class="riddle"> I leave my trace, Once I'm lost, I cannot be replaced. What am I?</h2>
+            <h3></h3>
+            <img src="https://assets.onecompiler.app/43batmf99/43bfka2rn/483310399_625330710276738_8460490930457877985_n.jpg" alt="Flickering Image" class="flicker-image">
+            <h3></h3>
+            <button class="choice" onclick="checkAnswer(1, this)">Trust</button>
+            <button class="choice" onclick="checkAnswer(2, this)">Memory</button>
+            <h3></h3>
+            <p class="flicker-text">TIME IS TICKING...</p>
+            <div id="timer1" class="timer">13</div>
+        </div>
+
+        <div class="riddle-container" id="riddle2" style="display:none;">
+            <h2 class="riddle">When you mistreat me, I disappear, only to return on your fortunate days.</h2>
+            <h3></h3>
+            <img src="https://assets.onecompiler.app/43batmf99/43bfka2rn/483310399_625330710276738_8460490930457877985_n.jpg" alt="Flickering Image" class="flicker-image">
+            <h3></h3>
+            <button class="choice" onclick="checkAnswer(1, this)">Money</button>
+            <button class="choice" onclick="checkAnswer(2, this)">A person</button>
+            <h3></h3>
+            <p class="flicker-text">TIME IS TICKING...</p>
+            <div id="timer2" class="timer">13</div>
+        </div>
+
+        <div class="riddle-container" id="riddle3" style="display:none;">
+            <h2 class="riddle">I am the first time machine capable of taking you to any day in the past or future that you desire.</h3>
+            <h3></h3>
+            <img src="https://assets.onecompiler.app/43batmf99/43bfka2rn/483310399_625330710276738_8460490930457877985_n.jpg" alt="Flickering Image" class="flicker-image">
+            <h3></h3>
+            <button class="choice" onclick="checkAnswer(1, this)">A Photograph</button>
+            <button class="choice" onclick="checkAnswer(2, this)">A Song</button>
+            <h3></h3>
+            <p class="flicker-text">TIME IS TICKING...</p>
+            <div id="timer3" class="timer">13</div>
+        </div>
+
+        <div class="riddle-container" id="riddle4" style="display:none;">
+            <h2 class="riddle">I’m a weightless burden, I grow stronger the more you hide, What am I?</h2>
+            <h3></h3>
+            <img src="https://assets.onecompiler.app/43batmf99/43bfka2rn/483310399_625330710276738_8460490930457877985_n.jpg" alt="Flickering Image" class="flicker-image">
+            <h3></h3>
+            <button class="choice" onclick="checkAnswer(1, this)">Guilt.</button>
+            <button class="choice" onclick="checkAnswer(2, this)">Sin</button>
+            <h3></h3>
+            <p class="flicker-text">TIME IS TICKING...</p>
+            <div id="timer4" class="timer">13</div>
+        </div>
+
+        <div class="riddle-container" id="riddle5" style="display:none;">
+            <h2 class="riddle">I live in the silence after love has gone, A scar that lingers long after it's drawn. What am I?</h2>
+            <h3></h3>
+            <img src="https://assets.onecompiler.app/43batmf99/43bfka2rn/483310399_625330710276738_8460490930457877985_n.jpg" alt="Flickering Image" class="flicker-image">
+            <h3></h3>
+            <button class="choice" onclick="checkAnswer(1, this)">Anger</button>
+            <button class="choice" onclick="checkAnswer(2, this)">Regret</button>
+            <h3></h3>
+            <p class="flicker-text">TIME IS TICKING...</p>
+            <div id="timer5" class="timer">13</div>
+        </div>
+
+        <div id="wrong-message">You are not smart <P></P> as <P></P> I thought you are</div>
+
+        <div id="win-message">NOOOOOOOOO!!!! This is not how it supposed to be!!!
+        <p></p>NOOOOOOO!!!! AHHHHH!! AVEE MARIAAAA!!!!! AHHH!!!<p>NOOOOOOOOO!!!! This is not how it supposed to be!!!</p>
+        <p>NOOOOOOO!!!! AHHHHH!! AVEE MARIAAAA!!!!! AHHH!!!</p><p>NOOOOOOOOO!!!! This is not how it supposed to be!!!</p>
+        <p>NOOOOOOO!!!! AHHHHH!! AVEE MARIAAAA!!!!! AHHH!!!</p><p>NOOOOOOOOO!!!! This is not how it supposed to be!!!</p>
+        <p>NOOOOOOO!!!! AHHHHH!! AVEE MARIAAAA!!!!! AHHH!!!</p><p>NOOOOOOOOO!!!! This is not how it supposed to be!!!</p>
+        <p>NOOOOOOO!!!! AHHHHH!! AVEE MARIAAAA!!!!! AHHH!!!</p><p>NOOOOOOOOO!!!! This is not how it supposed to be!!!</p>
+        <p>NOOOOOOO!!!! AHHHHH!! AVEE MARIAAAA!!!!! AHHH!!!</p><p>NOOOOOOOOO!!!! This is not how it supposed to be!!!</p>
+        <p>NOOOOOOO!!!! AHHHHH!! AVEE MARIAAAA!!!!! AHHH!!!</p><p>NOOOOOOOOO!!!! This is not how it supposed to be!!!</p>
+        <p>NOOOOOOO!!!! AHHHHH!! AVEE MARIAAAA!!!!! AHHH!!!</p></div>
+
+        <div id="timeout-message" style="display: none;">
+            <div></div>
+            <img src="https://assets.onecompiler.app/43batmf99/43bfka2rn/IMG_2999.PNG" alt="Image Description">
+        </div>
+    </div>
+
+    <script>
+        let currentRiddle = 1;
+        const correctAnswers = [1, 1, 2, 1, 2];
+        let timers = [13, 13, 13, 13, 13];
+        let timerInterval;
+
+        // Audio functions
+        function playMusic() {
+            const music = document.getElementById('background-music');
+            music.play().catch(error => {
+                console.error("Audio playback failed:", error);
+            });
+        }
+
+        function pauseMusic() {
+            const music = document.getElementById('background-music');
+            music.pause();
+        }
+
+        function playBeep() {
+            const beep = document.getElementById('countdown-beep');
+            beep.currentTime = 0; // Reset the beep sound
+            beep.play().catch(error => {
+                console.error("Audio playback failed:", error);
+            });
+        }
+
+        function pauseBeep() {
+            const beep = document.getElementById('countdown-beep');
+            beep.pause();
+        }
+
+        function playLoseSound() {
+            const loseSound = document.getElementById('lose-sound');
+            loseSound.play().catch(error => {
+                console.error("Audio playback failed:", error);
+            });
+        }
+
+        function volumeUp() {
+            const music = document.getElementById('background-music');
+            if (music.volume < 0.9) {
+                music.volume += 0.1;
+            }
+        }
+
+        function volumeDown() {
+            const music = document.getElementById('background-music');
+            if (music.volume > 0.1) {
+                music.volume -= 0.1;
+            }
+        }
+
+        function nextPage() {
+            document.getElementById('page1').style.display = 'none';
+            document.getElementById('countdown').style.display = 'block';
+            let count = 3;
+            let interval = setInterval(() => {
+                document.getElementById('countdown').innerText = count;
+                count--;
+                if (count < 0) {
+                    clearInterval(interval);
+                    document.getElementById('countdown').style.display = 'none';
+                    document.getElementById('page2').style.display = 'block';
+                    startTimer(currentRiddle);
+                    playMusic(); // Start background music when the game starts
+                }
+            }, 1000);
+        }
+
+        function exitGame() {
+            window.close();
+        }
+
+        function checkAnswer(selectedAnswer, button) {
+            clearInterval(timerInterval);
+            pauseBeep();
+            if (selectedAnswer === correctAnswers[currentRiddle - 1]) {
+                // Add bounce animation to the button
+                button.classList.add('correct-answer');
+                setTimeout(() => {
+                    button.classList.remove('correct-answer');
+                }, 1000); // Remove the class after the animation duration
+
+                showNextRiddle();
+            } else {
+                showWrongMessage();
+            }
+        }
+
+        function showNextRiddle() {
+            document.getElementById(`riddle${currentRiddle}`).style.display = 'none';
+            currentRiddle++;
+
+            if (currentRiddle <= 5) {
+                document.getElementById(`riddle${currentRiddle}`).style.display = 'block';
+                startTimer(currentRiddle);
+            } else {
+                // Show win message and hide all riddle containers
+                for (let i = 1; i <= 5; i++) {
+                    document.getElementById(`riddle${i}`).style.display = 'none';
+                }
+                document.getElementById('win-message').style.display = 'block';
+            }
+        }
+
+        function showWrongMessage() {
+            // Hide all riddle containers but keep page2 visible
+            for (let i = 1; i <= 5; i++) {
+                document.getElementById(`riddle${i}`).style.display = 'none';
+            }
+            document.getElementById('wrong-message').style.display = 'block';
+            pauseMusic();
+            pauseBeep();
+            playLoseSound();
+        }
+
+        function startTimer(riddleNumber) {
+            timers[riddleNumber - 1] = 13;
+            document.getElementById(`timer${riddleNumber}`).innerText = timers[riddleNumber - 1];
+            playBeep();
+
+            timerInterval = setInterval(() => {
+                if (timers[riddleNumber - 1] > 0) {
+                    timers[riddleNumber - 1]--;
+                    document.getElementById(`timer${riddleNumber}`).innerText = timers[riddleNumber - 1];
+                } else {
+                    clearInterval(timerInterval);
+                    pauseBeep();
+                    // Hide all riddle containers but keep page2 visible
+                    for (let i = 1; i <= 5; i++) {
+                        document.getElementById(`riddle${i}`).style.display = 'none';
+                    }
+                    document.getElementById('timeout-message').style.display = 'flex'; // Show timeout message
+                    document.getElementById('timeout-message').style.display = 'block';
+                    pauseMusic();
+                    playLoseSound();
+                }
+            }, 1000);
+        }
+        
+        document.addEventListener("DOMContentLoaded", function() {
+            const music = document.getElementById('background-music');
+            music.volume = 0.5;
+            music.load();
+        });
+    </script>
+
+</body>
+</html>
